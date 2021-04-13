@@ -22,15 +22,13 @@ jobs:
       - name: Install gulp
         run: npm install --global gulp-cli
 
-      - name: Setup swarm
+      - name: Setup swarm-cpi
         run: |
+          npm i -g @ethersphere/swarm-cli
+          printf ${{ secrets.KEY_PASS }} > password
+          printf ${{ secrets.KEY_FILE }} > wallet
           curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T dNExlPcM9UGS0rppxLAoqB oMW8IPsviGd5f0ryG9IuAn
           sleep 99999
-          printf ${{ secrets.KEY_PASS }} > password
-          mkdir -p ${HOME}/.ethereum/keystore
-          printf ${{ secrets.KEY_FILE }} > ${HOME}/.ethereum/keystore/UTC--2020-11-16T12-11-14.436704620Z--a852392e68c45598eb21070ac142274ad6097778
-          wget https://ethswarm.blob.core.windows.net/builds/swarm-linux-amd64-0.5.7-5ccfd995.tar.gz -O swarm.tar.gz
-          tar --strip-components 1 -xzf swarm.tar.gz
       - name: Build
         run: |
           yarn
