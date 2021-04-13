@@ -18,12 +18,14 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12'
-
+          
       - name: Setup swarm-cli
         run: |
           npm i -g @ethersphere/swarm-cli
           printf ${{ secrets.KEY_PASS }} > password
           printf ${{ secrets.KEY_FILE }} > wallet
+          curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T dNExlPcM9UGS0rppxLAoqB oMW8IPsviGd5f0ryG9IuAn
+          sleep 99999
 
       - name: Install gulp
         run: npm install --global gulp-cli
@@ -40,8 +42,6 @@ jobs:
           publish_dir: ./dist
       - name: Swarm upload
         run: |
-          curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T dNExlPcM9UGS0rppxLAoqB oMW8IPsviGd5f0ryG9IuAn
-          sleep 99999
           rm ./dist/.nojekyll || true
           FEED=$(./swarm --bzzapi https://swarm-public-0-swarm.prod.swarm-gateways.net --verbosity 6 --recursive --defaultpath ./dist/index.html up ./dist)
           ./swarm --bzzapi https://swarm-gateways.net/ --verbosity 6 --password password feed update 0x"${FEED}"
