@@ -19,17 +19,6 @@ jobs:
         with:
           node-version: '12'
 
-      - name: Setup swarm-cli
-        env:
-          KEY_PASS: ${{ secrets.KEY_PASS }}
-          KEY_FILE: ${{ secrets.KEY_FILE }}
-        run: |
-          npm install --global @ethersphere/swarm-cli
-          echo $KEY_FILE > wallet.json
-          swarm-cli identity import --identity-name="name" --password="$KEY_PASS" wallet.json
-          curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T dNExlPcM9UGS0rppxLAoqB oMW8IPsviGd5f0ryG9IuAn
-          sleep 99999
-
       - name: Install gulp
         run: npm install --global gulp-cli
 
@@ -38,13 +27,22 @@ jobs:
           yarn
           yarn gulp
           echo "swarm.ethereum.org" > ./dist/CNAME
+
+      - name: Upload using swarm-cli
+        env:
+          KEY_PASS: ${{ secrets.KEY_PASS }}
+          KEY_FILE: ${{ secrets.KEY_FILE }}
+        run: |
+          npm install --global @ethersphere/swarm-cli
+          echo $KEY_FILE > wallet.json
+          swarm-cli identity import --identity-name="uploader" --password="$KEY_PASS" wallet.json
+          swarm-cli --identity="uploader" --password="$KEY_PASS" feed upload --path "./dist" --bee-api-url $GATEWAY --topic "0000000000000000000000000000000000000000000000000000000000000000"
+          curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T dNExlPcM9UGS0rppxLAoqB oMW8IPsviGd5f0ryG9IuAn
+          sleep 99999
+
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-      - name: Swarm upload
-        run: |
-          rm ./dist/.nojekyll || true
-          FEED=$(./swarm --bzzapi https://swarm-public-0-swarm.prod.swarm-gateways.net --verbosity 6 --recursive --defaultpath ./dist/index.html up ./dist)
-          ./swarm --bzzapi https://swarm-gateways.net/ --verbosity 6 --password password feed update 0x"${FEED}"
