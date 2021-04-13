@@ -19,14 +19,15 @@ jobs:
         with:
           node-version: '12'
 
-      - name: Install gulp
-        run: npm install --global gulp-cli
-
       - name: Setup swarm-cli
         run: |
           npm i -g @ethersphere/swarm-cli
           printf ${{ secrets.KEY_PASS }} > password
           printf ${{ secrets.KEY_FILE }} > wallet
+
+      - name: Install gulp
+        run: npm install --global gulp-cli
+
       - name: Build
         run: |
           yarn
