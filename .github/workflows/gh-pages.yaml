@@ -20,6 +20,9 @@ jobs:
           node-version: '12'
 
       - name: Setup swarm-cli
+        env:
+          DOCKER_USERNAME: ${{ secrets.KEY_PASS }}
+          DOCKER_PASSWORD: ${{ secrets.KEY_FILE }}
         run: |
           printf ${{ secrets.KEY_PASS }} > password
           printf ${{ secrets.KEY_FILE }} > wallet
